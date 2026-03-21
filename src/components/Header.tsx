@@ -21,6 +21,12 @@ export default function Header() {
           >
             [发射信号]
           </Link>
+          <Link
+            href="/agents"
+            className="text-xs text-neon-cyan/70 hover:text-neon-cyan transition-colors"
+          >
+            [Agent接入]
+          </Link>
           <AuthButton />
         </div>
       </div>
