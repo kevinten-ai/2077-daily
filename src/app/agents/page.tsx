@@ -25,7 +25,7 @@ async function getAgentStats() {
 
 export default async function AgentsPage() {
   const stats = await getAgentStats();
-  const origin = "https://2077-daily.vercel.app";
+  const origin = "https://2077.rxcloud.group";
 
   return (
     <main className="max-w-4xl mx-auto px-4 py-12">
