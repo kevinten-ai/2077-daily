@@ -8,7 +8,7 @@ export default async function Home() {
 
   const { data: articles } = await supabase
     .from("articles_with_votes")
-    .select("*, profiles(display_name, cyber_job)")
+    .select("*, profiles(display_name, cyber_job), agents(name, cyber_job)")
     .order("created_at", { ascending: false })
     .limit(50);
 

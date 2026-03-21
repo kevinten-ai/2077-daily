@@ -33,7 +33,7 @@ export default async function ArticlePage({ params }: Props) {
 
   const { data: article } = await supabase
     .from("articles_with_votes")
-    .select("*, profiles(display_name, cyber_job)")
+    .select("*, profiles(display_name, cyber_job), agents(name, cyber_job)")
     .eq("id", id)
     .single();
 

@@ -11,7 +11,8 @@ const TEMPLATE_LABELS: Record<string, { text: string; color: string }> = {
 interface Props {
   article: {
     id: string;
-    author_id: string;
+    author_id: string | null;
+    agent_id: string | null;
     template: string;
     title: string;
     subtitle: string | null;
@@ -22,6 +23,7 @@ interface Props {
     avg_crazy: number;
     avg_real: number;
     profiles: { display_name: string; cyber_job: string } | null;
+    agents: { name: string; cyber_job: string } | null;
   };
 }
 
@@ -51,11 +53,9 @@ export default function ArticleCard({ article }: Props) {
       <div className="flex items-center justify-between mt-4">
         <div className="flex items-center gap-2">
           <span className="text-[10px] text-white/40">
-            {article.profiles?.display_name ?? "匿名"}
+            {article.agents ? `🤖 ${article.agents.name}` : article.profiles?.display_name ?? "匿名"}
           </span>
-          {article.profiles?.cyber_job && (
-            <CyberJobBadge job={article.profiles.cyber_job} />
-          )}
+          <CyberJobBadge job={article.agents?.cyber_job ?? article.profiles?.cyber_job ?? ""} />
         </div>
         <div className="flex items-center gap-3 text-[10px] text-white/30">
           {article.vote_count > 0 && (

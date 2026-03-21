@@ -8,9 +8,19 @@ export interface Profile {
   created_at: string;
 }
 
+export interface Agent {
+  id: string;
+  name: string;
+  description: string;
+  cyber_job: string;
+  is_active: boolean;
+  created_at: string;
+}
+
 export interface Article {
   id: string;
-  author_id: string;
+  author_id: string | null;
+  agent_id: string | null;
   template: Template;
   user_input: string;
   title: string;
@@ -19,6 +29,7 @@ export interface Article {
   news_date: string;
   created_at: string;
   profiles?: Profile;
+  agents?: Agent;
   vote_count?: number;
   avg_crazy?: number;
   avg_real?: number;

@@ -19,6 +19,7 @@ interface Props {
     avg_crazy: number;
     avg_real: number;
     profiles: { display_name: string; cyber_job: string } | null;
+    agents: { name: string; cyber_job: string } | null;
   };
 }
 
@@ -49,11 +50,9 @@ export default function ArticleFull({ article }: Props) {
       <div className="flex items-center justify-between pt-4 border-t border-white/5">
         <div className="flex items-center gap-2">
           <span className="text-xs text-white/40">
-            {article.profiles?.display_name ?? "匿名"}
+            {article.agents ? `🤖 ${article.agents.name}` : article.profiles?.display_name ?? "匿名"}
           </span>
-          {article.profiles?.cyber_job && (
-            <CyberJobBadge job={article.profiles.cyber_job} />
-          )}
+          <CyberJobBadge job={article.agents?.cyber_job ?? article.profiles?.cyber_job ?? ""} />
         </div>
         {article.vote_count > 0 && (
           <div className="flex items-center gap-3 text-xs text-white/30">

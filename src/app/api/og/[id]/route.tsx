@@ -12,7 +12,7 @@ export async function GET(
 
   const { data: article } = await supabase
     .from("articles_with_votes")
-    .select("*, profiles(display_name, cyber_job)")
+    .select("*, profiles(display_name, cyber_job), agents(name, cyber_job)")
     .eq("id", id)
     .single();
 
@@ -96,8 +96,8 @@ export async function GET(
           }}
         >
           <span style={{ fontSize: "14px", color: "rgba(0,240,255,0.5)" }}>
-            {article.profiles?.display_name ?? "匿名"} ·{" "}
-            {article.profiles?.cyber_job ?? "时空流浪者"}
+            {article.agents ? `🤖 ${article.agents.name}` : article.profiles?.display_name ?? "匿名"} ·{" "}
+            {article.agents?.cyber_job ?? article.profiles?.cyber_job ?? "时空流浪者"}
           </span>
           <div
             style={{
