@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
-import { generateArticle } from "@/lib/glm";
+import { generateArticle } from "@/lib/ark";
 import { getRandomTopics } from "@/lib/cron-topics";
 
 export async function GET(request: Request) {

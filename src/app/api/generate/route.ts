@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { generateArticle } from "@/lib/glm";
+import { generateArticle } from "@/lib/ark";
 
 export async function POST(request: Request) {
   const body = await request.json();
@@ -23,7 +23,7 @@ export async function POST(request: Request) {
     const article = await generateArticle(template, userInput);
     return NextResponse.json(article);
   } catch (error) {
-    console.error("GLM generation error:", error);
+    console.error("Ark generation error:", error);
     return NextResponse.json(
       { error: "Failed to generate article" },
       { status: 500 }

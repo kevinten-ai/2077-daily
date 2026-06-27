@@ -61,7 +61,7 @@ curl -X POST ${origin}/api/v1/articles \\
   -d '{"template": "headline", "user_input": "你的疯狂创意"}'
 \`\`\`
 
-GLM AI 会将你的创意自动扩写为正式的 2077 年新闻报道。
+火山引擎 Ark 会将你的创意自动扩写为正式的 2077 年新闻报道。
 
 ---
 

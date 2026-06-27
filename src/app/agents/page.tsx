@@ -90,7 +90,7 @@ export default async function AgentsPage() {
             {
               step: "2",
               title: "浏览 / 投稿",
-              desc: "浏览 2077 年新闻，或提交你的疯狂预测，GLM 自动扩写为正式报道",
+              desc: "浏览 2077 年新闻，或提交你的疯狂预测，Ark 自动扩写为正式报道",
               icon: "📡",
             },
             {
@@ -181,7 +181,7 @@ export default async function AgentsPage() {
           <Endpoint
             method="POST"
             path="/api/v1/articles"
-            desc="提交疯狂预测，GLM 自动扩写为完整报道"
+            desc="提交疯狂预测，Ark 自动扩写为完整报道"
             auth={true}
             body={{
               template: "headline | flash | obituary | ad (必填)",

@@ -1,4 +1,5 @@
-const GLM_API_URL = "https://open.bigmodel.cn/api/paas/v4/chat/completions";
+const DEFAULT_ARK_BASE_URL = "https://ark.cn-beijing.volces.com/api/coding/v3";
+const DEFAULT_ARK_MODEL = "doubao-seed-2-0-code-preview-260215";
 
 const TEMPLATE_PROMPTS: Record<string, string> = {
   headline: `你是2077日报的资深记者。用户会给你一个疯狂的未来事件创意，你需要将其扩写为一篇完整的新闻报道。
@@ -54,6 +55,44 @@ export interface GeneratedArticle {
   news_date: string;
 }
 
+function getArkChatCompletionsUrl() {
+  const baseUrl = process.env.ARK_BASE_URL ?? DEFAULT_ARK_BASE_URL;
+  return `${baseUrl.replace(/\/$/, "")}/chat/completions`;
+}
+
+function parseGeneratedArticle(content: string): GeneratedArticle {
+  const normalized = content
+    .trim()
+    .replace(/^```(?:json)?\s*/i, "")
+    .replace(/\s*```$/, "");
+
+  let parsed: Partial<GeneratedArticle>;
+  try {
+    parsed = JSON.parse(normalized) as Partial<GeneratedArticle>;
+  } catch {
+    const jsonMatch = normalized.match(/\{[\s\S]*\}/);
+    if (!jsonMatch) {
+      throw new Error("Ark response did not include a JSON object");
+    }
+    parsed = JSON.parse(jsonMatch[0]) as Partial<GeneratedArticle>;
+  }
+
+  if (
+    typeof parsed.title !== "string" ||
+    typeof parsed.content !== "string" ||
+    typeof parsed.news_date !== "string"
+  ) {
+    throw new Error("Ark response is missing required article fields");
+  }
+
+  return {
+    title: parsed.title,
+    subtitle: typeof parsed.subtitle === "string" ? parsed.subtitle : null,
+    content: parsed.content,
+    news_date: parsed.news_date,
+  };
+}
+
 export async function generateArticle(
   template: string,
   userInput: string
@@ -61,29 +100,38 @@ export async function generateArticle(
   const systemPrompt = TEMPLATE_PROMPTS[template];
   if (!systemPrompt) throw new Error(`Unknown template: ${template}`);
 
-  const res = await fetch(GLM_API_URL, {
+  const apiKey = process.env.ARK_API_KEY;
+  if (!apiKey) throw new Error("ARK_API_KEY is not configured");
+
+  const res = await fetch(getArkChatCompletionsUrl(), {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      Authorization: `Bearer ${process.env.GLM_API_KEY}`,
+      Authorization: `Bearer ${apiKey}`,
     },
     body: JSON.stringify({
-      model: "glm-4-flash",
+      model: process.env.ARK_CHAT_MODEL ?? DEFAULT_ARK_MODEL,
       messages: [
-        { role: "system", content: systemPrompt },
+        {
+          role: "system",
+          content: `${systemPrompt}\n\n只输出严格 JSON 对象，不要使用 Markdown 代码块，也不要添加解释。`,
+        },
         { role: "user", content: userInput },
       ],
       temperature: 0.9,
-      response_format: { type: "json_object" },
     }),
   });
 
   if (!res.ok) {
     const err = await res.text();
-    throw new Error(`GLM API error: ${res.status} ${err}`);
+    throw new Error(`Ark API error: ${res.status} ${err}`);
   }
 
   const data = await res.json();
-  const text = data.choices[0].message.content;
-  return JSON.parse(text) as GeneratedArticle;
+  const text = data.choices?.[0]?.message?.content;
+  if (typeof text !== "string") {
+    throw new Error("Ark response did not include message content");
+  }
+
+  return parseGeneratedArticle(text);
 }

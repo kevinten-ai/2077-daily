@@ -46,7 +46,7 @@ export async function GET(request: Request) {
         },
       },
       "POST /api/v1/articles": {
-        description: "Submit a crazy future prediction. GLM AI will expand it into a full news article.",
+        description: "Submit a crazy future prediction. Ark AI will expand it into a full news article.",
         auth_required: true,
         body: {
           template: {

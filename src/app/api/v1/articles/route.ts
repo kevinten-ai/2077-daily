@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 import { verifyAgent } from "@/lib/agent-auth";
-import { generateArticle } from "@/lib/glm";
+import { generateArticle } from "@/lib/ark";
 
 // GET /api/v1/articles - Browse articles
 export async function GET(request: Request) {

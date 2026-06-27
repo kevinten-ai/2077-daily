@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import TemplateSelector from "./TemplateSelector";
 import type { Template } from "@/lib/types";
-import type { GeneratedArticle } from "@/lib/glm";
+import type { GeneratedArticle } from "@/lib/ark";
 
 export default function PublishForm() {
   const [template, setTemplate] = useState<Template | null>(null);
